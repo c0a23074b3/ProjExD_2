@@ -28,6 +28,12 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+def kk_dict():
+    roto_face = {
+
+    }  # rotozoomしたSurfaceを値とした辞書を作成
+    kk_img = pg.image.load("")
+
 
 #  課題２　時間とともに爆弾が拡大、加速
 def big_fast():
@@ -62,19 +68,18 @@ def game_over(screen: pg.display) -> None:
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
-    
+    # ここからこうかとんの設定
     bg_img = pg.image.load("fig/pg_bg.jpg")    
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
-
-    
+    # ここから爆弾の設定 
     bm_img = pg.Surface((20,20))
     bm_img.set_colorkey((0,0,0))
     pg.draw.circle(bm_img, (255,0,0), (10,10), 10)
     bm_rct = bm_img.get_rect()
     bm_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
-    vx, vy = +5, +5
+    vx, vy = +5, +5  # 横方向速度、縦方向速度
 
     clock = pg.time.Clock()
     tmr = 0
@@ -106,7 +111,7 @@ def main():
         yoko, tate = check_bound(bm_rct)
         if not yoko:  # 横方向にはみ出たら
             vx *= -1
-        if not tate:
+        if not tate:  # 縦方向にはみ出たら
             vy *= -1
     
         pg.display.update()
