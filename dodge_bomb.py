@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import random
 import pygame as pg
 
@@ -10,7 +11,7 @@ DELTA = {
     pg.K_DOWN: (0,+5),
     pg.K_LEFT: (-5,0),
     pg.K_RIGHT: (+5,0)
-}#練習問題１ 移動量辞書、押下キーに対応
+}  # 練習問題１ 移動量辞書、押下キーに対応
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -26,6 +27,37 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
     if obj_rct.top < 0 or HEIGHT < obj_rct.bottom:
         tate = False
     return yoko, tate
+
+
+#  課題２　時間とともに爆弾が拡大、加速
+def big_fast():
+    accs = [a for a in range(1, 11)]
+    for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.drawcircle(bb_img, (255,0,0),(10*r, 10*r), 10*r)
+
+
+#  課題３　ゲームオーバー画面
+def game_over(screen: pg.display) -> None:
+    """
+    引数：displayのみ
+    戻り値：なし
+    """
+    img = pg.Surface((1600, 900))
+    fonto = pg.font.Font(None, 80)
+    go_img = img.get_rect()  # gameoverの黒画面の四角形を生成する
+    go_img.center = 0, 0
+    kk_sad_img = pg.image.load("fig/8.png")  # 泣いているこうかとんの画像を挿入
+    kk_sad_img = pg.transform.rotozoom(kk_sad_img, 0, 3)
+    txt = fonto.render("Game Over", True, (255, 255, 255))  # gameoverの文字を入力
+    img.set_alpha(150)
+    screen.blit(img, go_img.center)
+    screen.blit(kk_sad_img, [400, 450])
+    screen.blit(kk_sad_img, [1200,450])
+    screen.blit(txt, [650, 450])
+    pg.display.update()
+
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -52,10 +84,12 @@ def main():
                 return
         if kk_rct.colliderect(bm_rct):  # こうかとんが爆弾とぶつかったら
             print("gameover")
+            game_over(screen)
+            time.sleep(5)
             return
         screen.blit(bg_img, [0, 0]) 
 
-        #こうかとんと移動の表示
+        # こうかとんと移動の表示
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
         for k, v in DELTA.items():  # 練習１
@@ -66,7 +100,7 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        #爆弾移動と表示
+        # 爆弾移動と表示
         bm_rct.move_ip(vx, vy)
         screen.blit(bm_img, bm_rct)
         yoko, tate = check_bound(bm_rct)
