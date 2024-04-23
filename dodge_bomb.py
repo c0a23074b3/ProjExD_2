@@ -64,7 +64,6 @@ def game_over(screen: pg.display) -> None:
     pg.display.update()
 
 
-
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
