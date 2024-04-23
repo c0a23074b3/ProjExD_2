@@ -1,5 +1,6 @@
 import os
 import sys
+import random
 import pygame as pg
 
 
@@ -16,10 +17,20 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
+    
     bg_img = pg.image.load("fig/pg_bg.jpg")    
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 2.0)
+    bm_img = pg.Surface((20,20))
+    bm_img.set_colorkey((0,0,0))
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
+    pg.draw.circle(bm_img, (255,0,0), (10,10), 10)
+    
+    bm_rct = bm_img.get_rect()
+    bm_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
+
+    vx, vy = +5, +5
+
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -30,12 +41,14 @@ def main():
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
-        for k, v in DELTA.items():
+        for k, v in DELTA.items():#練習１
             if key_lst[k]:#押されたキーがTrueなら
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
         kk_rct.move_ip(sum_mv)
+        bm_rct.move_ip(vx, vy)
         screen.blit(kk_img, kk_rct)
+        screen.blit(bm_img, bm_rct.center)
         pg.display.update()
         tmr += 1
         clock.tick(50)
